@@ -1,0 +1,50 @@
+# Exercițiul 2: Creați un model de clasificare text pentru categoriile 'comp.graphics'
+# și 'sci.med' din 20 Newsgroups. Folosiți CountVectorizer, antrenați un model Naive Bayes
+# și afișați acuratețea pe setul de test.
+
+from sklearn.datasets import fetch_20newsgroups
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.naive_bayes import MultinomialNB
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score
+
+print("1. Incep download dataset...")
+
+categories = ['comp.graphics', 'sci.med']
+data = fetch_20newsgroups(
+    subset='all',
+    categories=categories,
+    remove=('headers', 'footers', 'quotes')
+)
+# === Your code starts here ===
+
+X_train, X_test, y_train, y_test = train_test_split(
+    data.data,
+    data.target,
+    test_size=0.2,
+    random_state=42
+)
+
+
+print("3. Split facut")
+
+vectorizer = CountVectorizer()
+
+X_train_vectorized = vectorizer.fit_transform(X_train)
+X_test_vectorized = vectorizer.transform(X_test)
+
+print("4. Vectorizare gata")
+
+model = MultinomialNB()
+
+model.fit(X_train_vectorized, y_train)
+
+print("5. Model antrenat")
+
+y_pred = model.predict(X_test_vectorized)
+
+accuracy = accuracy_score(y_test, y_pred)
+
+print("accuracy:", accuracy)
+
+# === Your code ends here ===

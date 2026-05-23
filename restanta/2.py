@@ -18,7 +18,13 @@ data = fetch_20newsgroups(subset='all', categories=categories, remove=('headers'
 print("2. Dataset descarcat")
 print(data)
 
-
+# PASI PENTRU ACEST EXERCITIU:
+# TRAIN_TEST_SPLIT
+# TE FOLOSESTI DE CE TI SE DA PT A FACE FIT_TRANSFORM + TRANSFORM
+# => FIT_TRANSFORM => X_train_vectorized PE BAZA X_TRAIN
+# => TRANSFORM => X_test_vectorized PE BAZA X_TEST
+# INITIALIZEZI MODEL
+# MODEL.FIT
 
 X_train, X_test, y_train, y_test = train_test_split(
     data.data,
