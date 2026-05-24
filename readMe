@@ -1,0 +1,143 @@
+LA INCEPUT DE EXAMEN:
+pip install pandas numpy matplotlib seaborn requests beautifulsoup4 lxml scikit-learn nltk torch torchvision jupyter
+
+1. TIPS & TRICKS PRIMUL EXERCITIU:
+
+url = "http://quotes.toscrape.com"
+response = requests.get(url)
+response.encoding = "utf-8"
+soup = BeautifulSoup(response.text, 'html.parser')
+
+soup.find_all("elementTag", class_="NUMELE CLASEI")
+    => selectezi toate elementele cu tag ul si clasa respectiva
+
+
+
+2. TIPS & TRICKS AL DOILEA EXERCITIU:
+
+Încarc datele → am caracteristicile (X) și răspunsurile/corectitudinea/clasele (y).
+Împart datele → o parte pentru învățare (training), o parte pentru verificare (testing).
+Antrenez modelul → modelul învață relația dintre X_train și y_train din datele de training.
+Fac predicții → îi dau doar date noi (X_test), iar modelul estimează valorile y (y_pred).
+Evaluez modelul → compar predicțiile (y_pred) cu răspunsurile reale (y_test).
+Interpretez rezultatele → verific cât de bine a învățat modelul și unde greșește.
+
+x - features
+y - target
+
+ORICE VECTORIZER SAU SCALER E UTILIZAT PT A TRANSFORMA DATELE DE TEST/INVATARE IN DATE INTELESE DE MODEL:
+Pentru aplicarea unui vectorizer:
+    X_train → fit_transform
+    X_test  → transform
+    y_train → nu
+    y_test  → nu
+
+nltk.download("movie_reviews") => daca vezi nlth trebuie apelat ca sa iti incarce datele
+Ce naiba e cu param grid astia?
+pai, un model are anumiti parametrii, daca tre sa ii gasesti pe cei mai buni in cazul tau
+pe un anumite model, folosesti ceva gen
+GridSearchCV, astfel:
+
+ param_grid = {
+    "C": [0.01, 0.1, 1, 10, 100],
+    "penalty": ["l1", "l2"],
+    "solver": ["saga"]
+}
+
+ grid_search = GridSearchCV(
+    LogisticRegression(max_iter=5000),
+    param_grid,
+    cv=5,
+    scoring="accuracy",
+    n_jobs=-1
+)
+
+dupa, cu grid_search faci fit pe datele de train
+si ulterior obtii:
+    grid_search.best_params_ ;
+    grid_search.best_score_ ;
+    best_estimator_ => aici practic iti returneaza cel mai bun model
+daca ti se cer.
+dupa pe baza celui mai bun model, poti sa faci predictia si sa vezi acuratetea
+
+3. TIPS & TRICKS AL TREILEA EXERCITIU:
+
+model.intercept - Constanta din ecuația regresiei
+model.coef_ - Coeficienții învățați pentru fiecare caracteristică.
+
+PENTRU ACEST MODEL:
+model = KNeighborsRegressor(n_neighbors=3)
+
+Pentur handle missing values pe data frame cu SimpleImputer
+imputer = SimpleImputer(strategy="mean") // foloseste media coloanei respective
+
+df_imputed = pd.DataFrame(
+    imputer.fit_transform(df),
+    columns=df.columns
+)
+
+dupa poti aplica si un standard scaler pt a normaliza valorile:
+    # După transformare:
+    # media ≈ 0
+    # deviația standard ≈ 1:
+scaler = StandardScaler()
+
+df_scaled = pd.DataFrame(
+    scaler.fit_transform(df_imputed),
+    columns=df.columns
+
+PENTRU MODEL KMEANS
+kmeans = KMeans(n_clusters=3, random_state=42)
+
+DBSCAN E UTILIZAT PENTRU A ELIMINA OUTLIERS
+# eps = cât de aproape trebuie să fie punctele ca să fie considerate vecine.
+# min_samples = câte puncte trebuie să existe într-o zonă ca să formeze un cluster.
+dbscan = DBSCAN(eps=0.8, min_samples=5)
+
+dbscan.fit(df_scaled) => Si practic aici il aplici pt data frame ul tau cu x uri
+
+Cum identifici outliersii?
+# labels_ conține clusterul fiecărui punct.
+# -1 înseamnă outlier/zgomot.
+cluster_labels = dbscan.labels_
+outliers = df_scaled[cluster_labels == -1]
+mai multe despre asta la T4 => SOLUTION 3
+
+Perform Agglomerative Clustering T4 SOLUTION 4 (linkage matrix for plotting a dendrogram also there)
+# Agglomerative Clustering pornește cu fiecare punct separat
+# și apoi unește treptat punctele/grupurile cele mai apropiate.
+# n_clusters=3 înseamnă că vrem la final 3 grupuri.
+agg = AgglomerativeClustering(n_clusters=3)
+# fit_predict face două lucruri:
+# - antrenează/găsește grupurile
+# - returnează eticheta clusterului pentru fiecare rând
+cluster_labels = agg.fit_predict(df_scaled)
+
+SILHOUETTE SCORE: t4 SOLUTION5
+kmeans_score = silhouette_score(
+    X_scaled,
+    kmeans_labels
+)
+Customer Segmentation Use Case - t4 solution6
+
+Anomaly Detection - t4 solution7; np.vstack
+
+PCA - T4 SOLUTION 8 - utilizat pt a reduce dimensiunea datelor
+adica:
+Date cu 4 coloane
+↓
+PCA
+↓
+Date cu 2 coloane
+↓
+Pot fi desenate într-un grafic
+
+Perceptron AND GATE & XOR GATE - T5 - solution 1
+
+simple MLP model, BCELoss, Adam,zero_grad,  loss.backward(), optimizer.step() - T5 - solution 2
+
+
+
+
+
+4. TIPS & TRICKS AL PATRULEA EXERCITIU:
