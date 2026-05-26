@@ -14,6 +14,8 @@ df = pd.read_csv(url)
 df = df.dropna()
 
 X = df.drop("median_house_value", axis=1)
+# axis=1 înseamnă coloană (axis=0 ar însemna rând).
+
 y = df["median_house_value"]
 
 X = pd.get_dummies(X, drop_first=True)

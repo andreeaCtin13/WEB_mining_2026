@@ -137,6 +137,9 @@ Perceptron AND GATE & XOR GATE - T5 - solution 1
 simple MLP model, BCELoss, Adam,zero_grad,  loss.backward(), optimizer.step() - T5 - solution 2
 
 
+FLAVIUS REPO:
+https://v0-web-scraping-tutorial.vercel.app/
+
 
 
 
